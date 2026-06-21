@@ -1,5 +1,6 @@
 import * as authService from "../services/auth/auth.service.js";
 import { ENV_VAR } from "../utils/env.js";
+import validator from "validator";
 
 /*
     Controller function to handle user registration.
@@ -11,7 +12,6 @@ import { ENV_VAR } from "../utils/env.js";
 
 */
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const register = async (req, res, next) => {
   try {
@@ -23,7 +23,7 @@ export const register = async (req, res, next) => {
         message: "Email, name, and password are required fields",
       });
     }
-    if (!emailRegex.test(email)) {
+    if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format. Please provide a valid email address",
@@ -74,7 +74,7 @@ export const login = async (req, res, next) => {
       });
     }
 
-    if (!emailRegex.test(email)) {
+    if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format. Please provide a valid email address",
