@@ -1,4 +1,5 @@
 import * as authService from "../services/auth/auth.service.js";
+import { ENV_VAR } from "../utils/env.js";
 
 /*
     Controller function to handle user registration.
@@ -9,41 +10,42 @@ import * as authService from "../services/auth/auth.service.js";
     - If any error occurs during the process, it passes the error to the next middleware for handling.
 
 */
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const register = async (req, res, next) => {
   try {
     const { email, name, password } = req.body;
 
-    if (!email || !name || !password) {
-      res.status(400).json({
+    if (!email.trim() || !name.trim() || !password) {
+      return res.status(400).json({
+        success: false,
         message: "Email, name, and password are required fields",
       });
     }
-    const validateEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    if (!email.match(validateEmail)) {
-      res.status(400).json({
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
         message: "Invalid email format. Please provide a valid email address",
       });
     }
-    if (password.length < 6) {
-      res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
+    if (typeof password !== "string" || password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
     }
 
     const userData = { email, name, password };
-    const result = authService.registerUser(userData);
+    const result = await authService.registerUser(userData);
 
     res.status(201).json({
+      success: true,
       message: "User registered successfully",
       data: result,
     });
   } catch (error) {
-    if (error.statusCode) {
-      res
-        .status(error.statusCode)
-        .json({ success: false, message: error.message });
-    }
-    next(error);
+    return next(error);
   }
 };
 
@@ -60,39 +62,34 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      res.status(400).json({
+    if (
+      !email ||
+      typeof email !== "string" ||
+      !password ||
+      typeof password !== "string"
+    ) {
+      return res.status(400).json({
+        success: false,
         message: "Email and password are required fields",
       });
     }
 
-    const validateEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-
-    if (!email.match(validateEmail)) {
-      res.status(400).json({
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
         message: "Invalid email format. Please provide a valid email address",
-      });
-    }
-
-    if (password.length < 6) {
-      res.status(400).json({
-        message: "Password must be at least 6 characters long",
       });
     }
 
     const result = await authService.loginUser(email, password);
 
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
       message: "User logged in successfully",
       data: result,
     });
   } catch (error) {
-    if (error.statusCode) {
-      res
-        .status(error.statusCode)
-        .json({ success: false, message: error.message });
-    }
-    next(error);
+    return next(error);
   }
 };
 
@@ -109,25 +106,21 @@ export const googleAuth = async (req, res, next) => {
   try {
     const { credential } = req.body;
 
-    if (!credential) {
-      res.status(400).json({
+    if (!credential || typeof credential !== "string") {
+      return res.status(400).json({
+        success: false,
         message: "Google credential is required",
       });
     }
-
     const result = await authService.googleClientLogin(credential);
 
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
       message: "User logged in successfully via Google",
       data: result,
     });
   } catch (error) {
-    if (error.statusCode) {
-      res
-        .status(error.statusCode)
-        .json({ success: false, message: error.message });
-    }
-    next(error);
+    return next(error);
   }
 };
 
@@ -140,16 +133,17 @@ export const googleAuth = async (req, res, next) => {
 */
 export const getUserProfile = async (req, res, next) => {
   try {
-    const user = await authService.getUserProfile(req.user.id);
+    const userId = req.user?.id;
+    const user = await authService.getUserProfile(userId);
     return res.status(200).json({
+      success: true,
       message: "User profile retrieved successfully",
       data: user,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
-
 
 /*
     Controller function to handle user logout.
@@ -157,14 +151,19 @@ export const getUserProfile = async (req, res, next) => {
     - If any error occurs during the process, it passes the error to the next middleware for handling.
 */
 
-export const logout = async (req, res, next) => {
+export const logout = (req, res, next) => {
   try {
-    res.status(200).json({
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: ENV_VAR.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
       success: true,
       message: "User logged out successfully",
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
-

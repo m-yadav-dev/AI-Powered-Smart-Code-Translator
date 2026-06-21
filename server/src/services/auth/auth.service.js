@@ -13,9 +13,7 @@ import { verifyGoogleToken } from "../../config/google.config.js";
 
 export const registerUser = async (userData) => {
   const { email, name, password } = userData;
-  console.log("Registering user with email:", email); // Debugging log to check the email being registered
   const isUserExist = await User.findOne({ email });
-  console.log("Step 1:", isUserExist);
   if (isUserExist) {
     const error = new Error("User with this email already exists");
     error.status = 400;
@@ -51,7 +49,6 @@ export const registerUser = async (userData) => {
 */
 export const loginUser = async (email, password) => {
   const user = await User.findOne({ email }).select("+password"); // Select the password field explicitly since it's not selected by default in the User model
-  console.log("Login attempt for email:", email); // Debugging log to check the email being used for login
   if (!user) {
     const error = new Error("Invalid email or password");
     error.status = 401;
@@ -59,7 +56,6 @@ export const loginUser = async (email, password) => {
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  console.log("Password valid for email:", email); // Debugging log to check if the password is valid
   if (!isPasswordValid) {
     const error = new Error("Invalid email or password");
     error.status = 401;
@@ -67,10 +63,8 @@ export const loginUser = async (email, password) => {
   }
 
   await User.updateOne({ _id: user._id }, { lastLogin: new Date() }); // Update the lastLogin field to the current date and time
-  console.log("User login updated for email:", email); // Debugging log to check if the last login timestamp is updated
 
   const token = generateToken(user);
-  console.log("Token generated for email:", email); // Debugging log to check if the token is generated successfully
   return {
     token,
     user: {
@@ -84,30 +78,32 @@ export const loginUser = async (email, password) => {
 
 /*
   /googleClientLogin API endpoint
-  - This function handles user login via Google OAuth by verifying the provided Google credential.
-  - It checks if the user already exists in the database based on their Google ID.
-  - If the user does not exist, it creates a new user in the database with the information extracted from the Google token.
-  - It then generates a JWT token for the user and returns it along with user details.
-  - If the user already exists, it updates their last login timestamp and returns the token and user details.
+  
+   - This function handles user login via Google OAuth by verifying the provided Google credential.
+   - It uses the verifyGoogleToken function to validate the Google token and extract user information.
+   - If the user exists in the database, it updates their last login timestamp; if not, it creates a new user with the extracted information.
+   - It then generates a JWT token for the user and returns it along with user details.
+   - If the Google token is invalid or verification fails, it throws an error with a status code of 401 (Unauthorized).
+
 */
 
 export const googleClientLogin = async (credential) => {
   const googleUser = await verifyGoogleToken(credential);
-  console.log("Google user verified:", googleUser); // Debugging log to check the Google user information extracted from the token
-  let user = await User.findOne(
+
+  const user = await User.findByIdAndUpdate(
+    { email: googleUser.email },
     {
-      googleId: googleUser.googleId,
+      $set: {
+        googleId: googleUser.googleId,
+        name: googleUser.name,
+        picture: googleUser.picture,
+        lastLogin: new Date(),
+      },
     },
     {
-      googleId: googleUser.googleId,
-      email: googleUser.email,
-      name: googleUser.name,
-      picture: googleUser.picture,
-      lastLogin: new Date(),
-    },
-    {
-      returnDocument: "after",
-      upsert: true, // Create a new user if one doesn't exist
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true,
     },
   );
 
@@ -117,7 +113,7 @@ export const googleClientLogin = async (credential) => {
     token,
     user: {
       id: user._id,
-      email: user.email,
+      email: user.email.email,
       name: user.name,
       picture: user.picture,
     },
@@ -132,7 +128,15 @@ export const googleClientLogin = async (credential) => {
   - If the user is found, it returns an object containing the user's ID, email, name, picture, creation date, and last login timestamp.
 */
 export const getUserProfile = async (userId) => {
-  const user = await User.findById(userId).select("-password -__v -googleId"); // Exclude the password and googleId fields from the returned user object
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    const error = new Error("Invalid user ID");
+    error.status = 400;
+    throw error;
+  }
+
+  const user = await User.findById(userId)
+    .select("-password -__v -googleId")
+    .lean();
 
   if (!user) {
     const error = new Error("User not found");
@@ -149,5 +153,4 @@ export const getUserProfile = async (userId) => {
     lastLogin: user.lastLogin,
   };
 
-  return user;
 };

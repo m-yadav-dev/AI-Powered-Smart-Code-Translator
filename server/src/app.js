@@ -13,7 +13,10 @@ import cors from "cors";
 import router from "./routes/routes.index.js";
 import { ENV_VAR } from "./utils/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 const app = express();
+
 
 const allowedOrigins = [
   ENV_VAR.CLIENT_URL,
@@ -23,12 +26,21 @@ const allowedOrigins = [
 ].filter(Boolean);
 console.log("Allowed Origins:", allowedOrigins);
 
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
   }),
 );
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+
+    }
+  }
+}));
 
 app.use(express.json());
 app.use("/api", router);
