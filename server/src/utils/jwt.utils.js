@@ -1,7 +1,7 @@
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { ENV_VAR } from "./env.js";
 
-export const generateToken = (user) => {
+export const generateToken = (res, user) => {
   const payload = {
     id: user._id,
     email: user.email,
@@ -17,12 +17,16 @@ export const generateToken = (user) => {
     expiresIn: options.expiresIn,
   });
 
+  res.cookie("token", token, {
+    httpOnly: true, // Cookie is not accessible via JavaScript
+    secure: ENV_VAR.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: "strict", // Prevent CSRF attacks
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7days expiration
+  });
+
   return token;
 };
 
-
 export const verifyToken = (token) => {
   return jwt.verify(token, ENV_VAR.JWT_SECRET || "your_jwt_secret");
-}
-
-
+};
