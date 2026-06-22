@@ -61,7 +61,6 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     if (
       !email ||
       typeof email !== "string" ||
@@ -82,7 +81,6 @@ export const login = async (req, res, next) => {
     }
 
     const result = await authService.loginUser(email, password);
-
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
