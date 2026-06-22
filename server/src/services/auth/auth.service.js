@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 import User from "../../models/User.model.js";
 import { generateToken } from "../../utils/jwt.utils.js";
 import { verifyGoogleToken } from "../../config/google.config.js";
@@ -63,7 +64,6 @@ export const loginUser = async (email, password) => {
   }
 
   await User.updateOne({ _id: user._id }, { lastLogin: new Date() }); // Update the lastLogin field to the current date and time
-
   const token = generateToken(user);
   return {
     token,
@@ -90,7 +90,7 @@ export const loginUser = async (email, password) => {
 export const googleClientLogin = async (credential) => {
   const googleUser = await verifyGoogleToken(credential);
 
-  const user = await User.findByIdAndUpdate(
+  const user = await User.findOneAndUpdate(
     { email: googleUser.email },
     {
       $set: {
@@ -113,7 +113,7 @@ export const googleClientLogin = async (credential) => {
     token,
     user: {
       id: user._id,
-      email: user.email.email,
+      email: user.email,
       name: user.name,
       picture: user.picture,
     },
