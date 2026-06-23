@@ -20,6 +20,7 @@
 */
 
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
@@ -28,7 +29,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -38,8 +39,16 @@ axiosInstance.interceptors.request.use(
   (error) => {
     return Promise.reject(error);
   },
-
 );
 
-
-
+axiosInstance.interceptors.request.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.message``.status === 401) {
+      Cookies.remove("token");
+    }
+    return Promise.reject(error);
+  },
+);

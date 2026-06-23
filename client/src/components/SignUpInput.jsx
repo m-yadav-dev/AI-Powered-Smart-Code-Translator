@@ -21,29 +21,33 @@ const inputFieldsConstantsData = {
   },
 };
 
-const SignUpInput = () => {
+const SignUpInput = ({ formData, onChange }) => {
   return (
     <>
-      <form className="space-y-4">
-        <FormInput
-          label={inputFieldsConstantsData.email.label}
-          id={inputFieldsConstantsData.email.id}
-          type={inputFieldsConstantsData.email.type}
-          placeholder={inputFieldsConstantsData.email.placeholder}
-        />
-        <FormInput
-          label={inputFieldsConstantsData.name.label}
-          id={inputFieldsConstantsData.name.id}
-          type={inputFieldsConstantsData.name.type}
-          placeholder={inputFieldsConstantsData.name.placeholder}
-        />
-        <FormInput
-          label={inputFieldsConstantsData.password.label}
-          id={inputFieldsConstantsData.password.id}
-          type={inputFieldsConstantsData.password.type}
-          placeholder={inputFieldsConstantsData.password.placeholder}
-        />
-      </form>
+      <FormInput
+        label={inputFieldsConstantsData.email.label}
+        id={inputFieldsConstantsData.email.id}
+        type={inputFieldsConstantsData.email.type}
+        placeholder={inputFieldsConstantsData.email.placeholder}
+        value={formData.email}
+        onChange={onChange}
+      />
+      <FormInput
+        label={inputFieldsConstantsData.name.label}
+        id={inputFieldsConstantsData.name.id}
+        type={inputFieldsConstantsData.name.type}
+        placeholder={inputFieldsConstantsData.name.placeholder}
+        value={formData.name}
+        onChange={onChange}
+      />
+      <FormInput
+        label={inputFieldsConstantsData.password.label}
+        id={inputFieldsConstantsData.password.id}
+        type={inputFieldsConstantsData.password.type}
+        placeholder={inputFieldsConstantsData.password.placeholder}
+        value={formData.password}
+        onChange={onChange}
+      />
     </>
   );
 };
