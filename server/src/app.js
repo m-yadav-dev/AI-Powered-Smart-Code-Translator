@@ -12,11 +12,15 @@ import express from "express";
 import cors from "cors";
 import router from "./routes/routes.index.js";
 import { ENV_VAR } from "./utils/env.js";
-import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
+import {
+  errorHandler,
+  notFoundHandler,
+} from "./middleware/error.middleware.js";
+import { apiLimiter } from "./utils/rate-limiter.js";
 import helmet from "helmet";
+
 import cookieParser from "cookie-parser";
 const app = express();
-
 
 const allowedOrigins = [
   ENV_VAR.CLIENT_URL,
@@ -24,7 +28,6 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
 ].filter(Boolean);
-console.log("Allowed Origins:", allowedOrigins);
 
 app.use(cookieParser());
 
@@ -34,18 +37,24 @@ app.use(
     credentials: true,
   }),
 );
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
 
-    }
-  }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"], // Allow content only from the same origin
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://apis.google.com"], // Allow scripts from the same origin and Google APIs
+        connectSrc: ["'self'", "https://api.gemini.com"], // Allow connections to the same origin and Gemini API
+        imgSrc: ["'self'", "data:"], // Allow images from the same origin and data URIs
+        styleSrc: ["'self'", "'unsafe-inline'"], // Allow styles from the same origin and inline styles
+      },
+    },
+  }),
+);
 
 app.use(express.json());
-app.use("/api", router);
+app.use("/api", apiLimiter, router);
 
-
-app.use(notFoundHandler)
-app.use(errorHandler)
+app.use(notFoundHandler);
+app.use(errorHandler);
 export default app;
