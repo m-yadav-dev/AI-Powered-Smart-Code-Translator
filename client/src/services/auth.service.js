@@ -9,7 +9,9 @@ export const registerService = async (data) => {
     return responseData.data.data;
   } catch (error) {
     console.error("Error in registerService:", error);
-    toast.error("Registration failed. Please try again.");
+    const errorMessage =
+      error.response?.data?.message || "Registration failed. Please try again.";
+    toast.error(errorMessage);
     throw error;
   }
 };
@@ -21,7 +23,9 @@ export const loginService = async (data) => {
     return responseData.data.data;
   } catch (error) {
     console.error("Error in loginService:", error);
-    toast.error("Login failed. Please try again.");
+    const errorMessage =
+      error.response?.data?.message || "Login failed. Please try again.";
+    toast.error(errorMessage);
     throw error;
   }
 };

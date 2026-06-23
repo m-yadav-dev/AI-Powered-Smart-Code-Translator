@@ -11,6 +11,7 @@
 import LogInPageInput from "../components/LoginInput";
 
 const LogInPage = () => {
+  
   return (
     <main className="bg-gray-200 min-h-screen max-w-full flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
