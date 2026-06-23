@@ -12,7 +12,6 @@ import validator from "validator";
 
 */
 
-
 export const register = async (req, res, next) => {
   try {
     const { email, name, password } = req.body;
@@ -163,5 +162,13 @@ export const logout = (req, res, next) => {
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+export const checkAuthStatus = (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
   }
 };

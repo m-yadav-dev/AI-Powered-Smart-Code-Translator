@@ -1,8 +1,9 @@
-import {Router} from "express";
+import { Router } from "express";
+import { authLimiter } from "../utils/rate-limiter.js";
 import authRouter from "./auth.routes.js";
 
-const router = Router()
+const router = Router();
 
-router.use("/auth", authRouter)
+router.use("/auth", authLimiter, authRouter);
 
-export default router
+export default router;
