@@ -16,24 +16,26 @@ const inputFieldsConstantsData = {
   },
 };
 
-const LogInPageInput = () => {
+const LogInPageInput = ({ onChange, formData }) => {
   return (
     <>
-      <form className="space-y-4">
-        <FormInput
-          label={inputFieldsConstantsData.email.label}
-          id={inputFieldsConstantsData.email.id}
-          type={inputFieldsConstantsData.email.type}
-          placeholder={inputFieldsConstantsData.email.placeholder}
-        />
+      <FormInput
+        label={inputFieldsConstantsData.email.label}
+        id={inputFieldsConstantsData.email.id}
+        type={inputFieldsConstantsData.email.type}
+        placeholder={inputFieldsConstantsData.email.placeholder}
+        value={formData.email}
+        onChange={onChange}
+      />
 
-        <FormInput
-          label={inputFieldsConstantsData.password.label}
-          id={inputFieldsConstantsData.password.id}
-          type={inputFieldsConstantsData.password.type}
-          placeholder={inputFieldsConstantsData.password.placeholder}
-        />
-      </form>
+      <FormInput
+        label={inputFieldsConstantsData.password.label}
+        id={inputFieldsConstantsData.password.id}
+        type={inputFieldsConstantsData.password.type}
+        placeholder={inputFieldsConstantsData.password.placeholder}
+        value={formData.password}
+        onChange={onChange}
+      />
     </>
   );
 };
