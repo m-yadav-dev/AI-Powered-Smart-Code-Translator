@@ -1,16 +1,59 @@
-import { Routes, Route } from "react-router-dom";
-import SignUpPage from "./pages/SignUpPage";
-import LogInPage from "./pages/LoginPage";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Toaster from "react-hot-toast";
-import Home from "./pages/HomePage";
-const App = () => {
+import { useAuthStore } from "./store/useAuthStore";
+import { Suspense, lazy, useEffect } from "react";
+
+const Home = lazy(() => import("./pages/HomePage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
+const LogInPage = lazy(() => import("./pages/LoginPage"));
+
+const LoadingScreen = ({ message }) => {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LogInPage />} />
-      </Routes>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+
+      <p className="text-sm font-medium text-gray-700 animate-pulse">
+        {message}
+      </p>
+    </div>
+    </>
+  );
+};
+
+const App = () => {
+  const { authUser, isCheckingAuth, checkAuthStatus } = useAuthStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  if (isCheckingAuth) {
+    return <LoadingScreen message="Loading page..." />;
+  }
+
+  return (
+    <>
+      <Suspense fallback={<LoadingScreen message="Loading page..." />}>
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={authUser ? <Home /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/signup"
+            element={authUser ? <Navigate to="/" replace /> : <SignUpPage />}
+          />
+          <Route
+            path="/login"
+            element={authUser ? <Navigate to="/" replace /> : <LogInPage />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to={authUser ? "/" : "/login"} replace />}
+          />
+        </Routes>
+      </Suspense>
       <Toaster />
     </>
   );

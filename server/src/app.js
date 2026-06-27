@@ -53,7 +53,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use("/api", apiLimiter, router);
+app.use("/api", router);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

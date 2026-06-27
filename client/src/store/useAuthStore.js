@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../services/api";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 export const useAuthStore = create((set) => ({
   authUser: null,
@@ -13,6 +14,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: response.data.data || response.data });
     } catch (error) {
       console.error("Error checking auth status:", error);
+
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -23,6 +25,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axiosInstance.post("/auth/register", userData);
+      console.log("SignUp response:", response.data);
       set({ authUser: response.data.data || response.data });
       toast.success("User registered successfully!");
       return true;
@@ -41,7 +44,12 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axiosInstance.post("/auth/login", userData);
+      console.log("Login response:", response.data);
       set({ authUser: response.data.data });
+      const token = response.data.data.token;
+      if (token) {
+        Cookies.set("token", token, { expires: 7 });
+      }
       toast.success("User logged in successfully!");
     } catch (error) {
       const errorMessage =
@@ -56,9 +64,14 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axiosInstance.post("/auth/google", { token });
+      
       set({
         authUser: response.data.data,
       });
+      const tokenFromResponse = response.data.data.token;
+      if (tokenFromResponse) {
+        Cookies.set("token", tokenFromResponse, { expires: 7 });
+      }
       toast.success("User logged in successfully via Google!");
     } catch (error) {
       const errorMessage =
@@ -77,6 +90,7 @@ export const useAuthStore = create((set) => ({
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      Cookies.remove("token");
       toast.success("User logged out successfully!");
     } catch (error) {
       const errorMessage =
