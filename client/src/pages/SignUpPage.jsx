@@ -12,6 +12,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SignUpInput from "../components/SignUpInput";
 import { useAuthStore } from "../store/useAuthStore";
+import { GoogleLogin } from "@react-oauth/google";
+import { toast } from "react-hot-toast";
 // Load Vite Google client Id from environment variables
 
 import {} from "lucide-react";
@@ -37,13 +39,13 @@ const SignUpPage = () => {
     event.preventDefault();
     const isValid = formData.name && formData.email && formData.password;
     if (!isValid) {
-      setErrorMessage("Please fill in all the required fields.");
+      toast.error("Please fill in all the fields.");
       return;
     }
 
     const isSignUpSuccessful = await signUp(formData);
     if (!isSignUpSuccessful) {
-      setErrorMessage("Sign up failed. Please try again.");
+      toast.error("Sign Up failed. Please try again.");
     }
 
     if (isSignUpSuccessful) {
@@ -51,8 +53,22 @@ const SignUpPage = () => {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    
+  const handleGoogleSignUp = async (credentialResponse) => {
+    const googleToken = credentialResponse?.credential;
+
+    if (!googleToken) {
+      toast.error("Google Sign Up failed. Please try again.");
+      return;
+    }
+
+    const isGoogleAuthSuccessful = await googleAuth(googleToken);
+
+    if (isGoogleAuthSuccessful) {
+      navigate("/");
+      return;
+    }
+
+    toast.error("Google Sign Up failed. Please try again.");
   };
 
   return (
@@ -77,12 +93,17 @@ const SignUpPage = () => {
                 {errorMessage}
               </p>
             )}
-            <button
-              onClick={handleGoogleSignUp}
-              className="bg-gray-800 text-white py-2 px-4 rounded cursor-pointer hover:bg-gray-600 transition duration-300"
-            >
-              Sign up with Google
-            </button>
+            <GoogleLogin
+              onSuccess={handleGoogleSignUp}
+              onError={() =>
+                toast.error("Google Sign Up failed. Please try again.")
+              }
+              theme="outline"
+              shape="rectangular"
+              size="large"
+              text="continue_with"
+              width="300"
+            />
           </div>
         </form>
         <div className="w-full max-w-md mt-4 text-center">

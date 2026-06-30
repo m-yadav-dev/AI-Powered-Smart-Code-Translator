@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import Toaster from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 import { Suspense, lazy, useEffect } from "react";
 
@@ -54,7 +53,6 @@ const App = () => {
           />
         </Routes>
       </Suspense>
-      <Toaster />
     </>
   );
 };
