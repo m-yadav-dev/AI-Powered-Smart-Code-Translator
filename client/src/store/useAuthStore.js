@@ -63,21 +63,29 @@ export const useAuthStore = create((set) => ({
   googleAuth: async (token) => {
     set({ isLoading: true });
     try {
-      const response = await axiosInstance.post("/auth/google", { token });
-      
-      set({
-        authUser: response.data.data,
+      const response = await axiosInstance.post("/auth/google", {
+        credential: token,
       });
-      const tokenFromResponse = response.data.data.token;
+
+      set({
+        authUser:
+          response.data.data?.user || response.data.data || response.data,
+      });
+      const tokenFromResponse =
+        response.data.data?.token || response.data.token;
       if (tokenFromResponse) {
         Cookies.set("token", tokenFromResponse, { expires: 7 });
       }
       toast.success("User logged in successfully via Google!");
+      return true;
     } catch (error) {
+      const rawMessage = error.response?.data?.message;
       const errorMessage =
-        error.response?.data?.message ||
-        "An error occurred during Google authentication.";
+        typeof rawMessage === "string"
+          ? rawMessage
+          : "An error occurred during Google authentication.";
       toast.error(errorMessage);
+      return false;
     } finally {
       set({ isLoading: false });
     }
