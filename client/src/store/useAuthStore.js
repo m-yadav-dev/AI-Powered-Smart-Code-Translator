@@ -27,6 +27,10 @@ export const useAuthStore = create((set) => ({
       const response = await axiosInstance.post("/auth/register", userData);
       console.log("SignUp response:", response.data);
       set({ authUser: response.data.data || response.data });
+      const token = response.data.data?.token || response.data.token;
+      if (token) {
+        Cookies.set("token", token, { expires: 7 });
+      }
       toast.success("User registered successfully!");
       return true;
     } catch (error) {
