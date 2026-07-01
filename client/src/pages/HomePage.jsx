@@ -1,12 +1,11 @@
-
-
+import Navbar from "../components/Navbar";
 
 const Home = () => {
   return (
-    <div>
-        <h1 className='text-3xl font-bold underline'>Home Page</h1>
-    </div>
-  )
-}
+    <>
+      <Navbar />
+    </>
+  );
+};
 
-export default Home
+export default Home;
