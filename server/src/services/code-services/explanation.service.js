@@ -10,20 +10,14 @@ export const explainCode = async (sourceCode, sourceLanguage) => {
 
   const rawResponse = await queryGemini(prompt);
 
-  try {
-    const responseJson = parseGeminiResponseToJson(rawResponse);
+  const responseJson = parseGeminiResponseToJson(rawResponse);
 
-    return {
-      explanation: responseJson?.explanation || "No explanation provided",
-    };
-  } catch (error) {
-    console.error(
-      `[Explanation Service Error]: Failed to parse Gemini response to JSON. Raw response: ${rawResponse}. Error: ${error.message}`,
-    );
+  return {
+    explanation: responseJson?.explanation || "No explanation provided",
+  };
 
-    return {
-      explanation:
-        "Failed to parse Gemini response to JSON. Please check the raw response for details.",
-    };
-  }
+  return {
+    explanation:
+      "Failed to parse Gemini response to JSON. Please check the raw response for details.",
+  };
 };

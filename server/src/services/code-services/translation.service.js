@@ -19,23 +19,17 @@ export const translateCode = async (
 
   const rawResponse = await queryGemini(prompt);
 
-  try {
-    const cleanedResponse = cleanedCodeResponse(rawResponse);
+  const cleanedResponse = cleanedCodeResponse(rawResponse);
 
-    return {
-      translatedCode: cleanedResponse || "No translated code provided",
-      sourceLanguage: sourceLanguageName,
-      targetLanguage: targetLanguageName,
-    };
-  } catch (error) {
-    console.error(
-      `[Translation Service Error]: Failed to clean Gemini response. Raw response: ${rawResponse}. Error: ${error.message}`,
-    );
+  return {
+    translatedCode: cleanedResponse || "No translated code provided",
+    sourceLanguage: sourceLanguageName,
+    targetLanguage: targetLanguageName,
+  };
 
-    return {
-      translatedCode: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
-      sourceLanguage: sourceLanguageName,
-      targetLanguage: targetLanguageName,
-    };
-  }
+  return {
+    translatedCode: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
+    sourceLanguage: sourceLanguageName,
+    targetLanguage: targetLanguageName,
+  };
 };

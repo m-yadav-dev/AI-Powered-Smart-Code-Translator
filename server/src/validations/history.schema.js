@@ -1,13 +1,24 @@
 import { z } from "zod";
 import mongoose from "mongoose";
 
-// check MongoDB ObjectId format, if not valid, return error message
+
+
+
+/*
+
+    Cases to consider:
+    1. Valid ObjectId: A valid 24-character hexadecimal string (e.g., "507f1f77bcf86cd799439011").
+    2. Invalid ObjectId: A string that is not a valid ObjectId (e.g., "invalidObjectId", "12345", "507f1f77bcf86cd7994390").
+    3. Empty String: An empty string should be considered invalid.
+    4. Null or Undefined: Null or undefined values should be considered invalid.
+    5. Non-string
+
+*/
 const objectSchema = z
   .string()
   .refine((value) => mongoose.Types.ObjectId.isValid(value), {
-    message: "Invalid MongoDB ObjectId format",
+    message: "Invalid MongoDB ObjectId format", 
   });
-
 export const createHistorySchema = z.object({
   userId: objectSchema,
   action: z.string().min(3, "Action must be at least 3 characters long"),
