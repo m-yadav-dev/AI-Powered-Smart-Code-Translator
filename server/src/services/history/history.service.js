@@ -3,7 +3,6 @@ import { createHistorySchema } from "../../validations/history.schema";
 import { z } from "zod";
 import { paginationSchema } from "../../validations/history.schema";
 import mongoose from "mongoose";
-import { da } from "zod/v4/locales";
 
 const objectIdValidator = z
   .string()
@@ -42,7 +41,7 @@ export const getUserHistory = async (userId, page = 1, limit = 10) => {
 
 export const getHistoryEntryById = async (entryId, userId) => {
   const entry = await History.findOne({ _id: entryId, userId })
-    .select("-__v")
+    .select("-__v") // __v is a version key added by Mongoose, which is not needed in the response
     .lean();
 
   if (!entry) {
