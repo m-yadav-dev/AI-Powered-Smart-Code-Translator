@@ -1,9 +1,6 @@
 import { z } from "zod";
 import mongoose from "mongoose";
 
-
-
-
 /*
 
     Cases to consider:
@@ -17,7 +14,7 @@ import mongoose from "mongoose";
 const objectSchema = z
   .string()
   .refine((value) => mongoose.Types.ObjectId.isValid(value), {
-    message: "Invalid MongoDB ObjectId format", 
+    message: "Invalid MongoDB ObjectId format",
   });
 export const createHistorySchema = z.object({
   userId: objectSchema,
@@ -30,6 +27,17 @@ export const paginationSchema = z.object({
   limit: z.number().int().positive().max(100).default(10),
 });
 
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+});
+
+export const getHistoryEntryByIdSchema = z.object({
+  entryId: z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+    message:
+      "Invalid History Entry ID format. Must be a valid MongoDB ObjectId.",
+  }),
+});
 
 
 

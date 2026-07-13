@@ -15,6 +15,9 @@ export const createHistoryEntry = async (data) => {
   return entry;
 };
 
+
+
+
 export const getUserHistory = async (userId, page = 1, limit = 10) => {
   const validUserId = objectIdValidator.parse(userId);
   const pagination = paginationSchema.parse({ page, limit });
