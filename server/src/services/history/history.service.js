@@ -1,7 +1,7 @@
-import History from "../../models/History.model";
-import { createHistorySchema } from "../../validations/history.schema";
+import History from "../../models/History.model.js";
+import { createHistorySchema } from "../../validations/history.schema.js";
 import { z } from "zod";
-import { paginationSchema } from "../../validations/history.schema";
+import { paginationSchema } from "../../validations/history.schema.js";
 import mongoose from "mongoose";
 
 const objectIdValidator = z
@@ -9,14 +9,17 @@ const objectIdValidator = z
   .refine((val) => mongoose.Types.ObjectId.isValid(val));
 
 export const createHistoryEntry = async (data) => {
-  const validateData = createHistorySchema.parse(data);
+  const validateData = createHistorySchema.safeParse(data);
+  console.log("Validated data:", validateData);
+  if (!validateData.success) {
+    const errorDetails = validateData.error.errors.map((err) => err.message);
+    throw new Error(`Validation failed: ${errorDetails.join(", ")}`);
+  }
+  
 
-  const entry = await History.create(validateData);
+  const entry = await History.create(validateData.data);
   return entry;
 };
-
-
-
 
 export const getUserHistory = async (userId, page = 1, limit = 10) => {
   const validUserId = objectIdValidator.parse(userId);

@@ -9,12 +9,12 @@ const historySchema = new mongoose.Schema(
       index: true,
     },
 
-    type: {
+    action: {
       type: String,
       enum: {
-        values: ["translate", "analyze", "optimize", "explain"],
+        values: ["translation", "complexity_analysis", "code_optimization", "code_explanation"],
         message:
-          "Type must be one of 'translate', 'analyze', 'optimize', or 'explain'",
+          "Action must be one of 'translation', 'complexity_analysis', 'code_optimization', or 'code_explanation'",
       },
     },
     inputCode: {
