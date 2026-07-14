@@ -19,7 +19,10 @@ const objectSchema = z
 export const createHistorySchema = z.object({
   userId: objectSchema,
   action: z.string().min(3, "Action must be at least 3 characters long"),
-  metadata: z.object(z.any()).optional(),
+  inputCode: z.string().min(1, "Input code is required"),
+  outputCode: z.string().min(1, "Output code is required"),
+  sourceLanguage: z.string().optional(),
+  targetLanguage: z.string().optional(),
 });
 
 export const paginationSchema = z.object({
@@ -38,6 +41,3 @@ export const getHistoryEntryByIdSchema = z.object({
       "Invalid History Entry ID format. Must be a valid MongoDB ObjectId.",
   }),
 });
-
-
-

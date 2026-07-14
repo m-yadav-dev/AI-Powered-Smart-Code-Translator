@@ -1,4 +1,4 @@
-import { ai, MODEL_NAME } from "../../config/gemini.config";
+import { ai, MODEL_NAME } from "../../config/gemini.config.js";
 export const queryGemini = async (prompt) => {
   try {
     const response = await ai.models.generateContent({

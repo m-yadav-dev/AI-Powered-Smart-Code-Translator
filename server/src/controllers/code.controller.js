@@ -15,7 +15,7 @@ import { codeOptimization } from "../services/code-services/optimization.service
      - optimizeCode: Validates the request body for code optimization, calls the codeOptimization service, saves the result to history, and returns the optimized code.
      
 */
-export const translateCode = async (req, res, next) => {
+export const translateSourceCode = async (req, res, next) => {
   try {
     const validationResult = translationSchema.safeParse(req.body);
 
@@ -32,16 +32,16 @@ export const translateCode = async (req, res, next) => {
     const { code, sourceLanguage, targetLanguage } = validationResult.data;
 
     const result = await translateCode(code, sourceLanguage, targetLanguage);
-
+    console.log("Translation result:", result);
     // Save to History
 
     createHistoryEntry({
-      userId: req.user._id,
+      userId: req.user._id.toString(),
+      action: "translation",
       inputCode: code,
       sourceLanguage,
-      type: "translation",
       targetLanguage,
-      output: result,
+      outputCode: result.translatedCode,
     }).catch((err) =>
       console.error("Failed to save history entry:", err.message),
     );
@@ -77,11 +77,11 @@ export const analyzeComplexity = async (req, res, next) => {
     // Save to History Schema
 
     createHistoryEntry({
-      userId: req.user._id,
+      userId: req.user._id.toString(),
+      action: "complexity_analysis",
       inputCode: code,
       sourceLanguage,
-      type: "complexity_analysis",
-      output: result,
+      outputCode: result.timeComplexity,
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
@@ -96,7 +96,7 @@ export const analyzeComplexity = async (req, res, next) => {
   }
 };
 
-export const codeExplain = async (req, res, next) => {
+export const explainSourceCode = async (req, res, next) => {
   try {
     const validationResult = analyzeComplexitySchema.safeParse(req.body);
 
@@ -115,11 +115,12 @@ export const codeExplain = async (req, res, next) => {
     // Save to History Schema
 
     createHistoryEntry({
-      userId: req.user._id,
+      userId: req.user._id.toString(),
+      action: "code_explanation",
+
       inputCode: code,
       sourceLanguage,
-      type: "code_explanation",
-      output: result,
+      outputCode: result.explanation,
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
@@ -133,7 +134,7 @@ export const codeExplain = async (req, res, next) => {
   }
 };
 
-export const optimizeCode = async (req, res, next) => {
+export const optimizeSourceCode = async (req, res, next) => {
   try {
     const validationResult = analyzeComplexitySchema.safeParse(req.body);
 
@@ -152,11 +153,11 @@ export const optimizeCode = async (req, res, next) => {
     // Save to History Schema
 
     createHistoryEntry({
-      userId: req.user._id,
+      userId: req.user._id.toString(),
+      action: "code_optimization",
       inputCode: code,
       sourceLanguage,
-      type: "code_optimization",
-      output: result,
+      outputCode: result.codeOptimization,
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
