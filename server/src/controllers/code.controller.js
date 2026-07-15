@@ -157,7 +157,7 @@ export const optimizeSourceCode = async (req, res, next) => {
       action: "code_optimization",
       inputCode: code,
       sourceLanguage,
-      outputCode: result.codeOptimization,
+      outputCode: result.optimizedCode,
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
