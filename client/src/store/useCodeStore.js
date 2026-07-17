@@ -12,6 +12,7 @@ export const useCodeStore = create((set) => ({
   sourceCode: "",
   codeOptimizationData: null,
   codeOptimization: "",
+  suggestions: "",
 
   translateSourceCode: async (code, sourceLanguage, targetLanguage) => {
     set({ isLoading: true, sourceCode: code, error: null });
@@ -50,7 +51,8 @@ export const useCodeStore = create((set) => ({
       set({
         complexityData: {
           timeComplexity: response.data.data.timeComplexity,
-          spaceComplexity: response.data.data.spaceComplexity,
+          spaceComplexity:
+            response.data.data.spaceComplexity,
           explanation: response.data.data.explanation,
         },
       });
@@ -101,7 +103,9 @@ export const useCodeStore = create((set) => ({
 
       set({
         codeOptimizationData: {
-          codeOptimization: response.data.data.codeOptimization,
+          optimizedCode: response.data.data.optimizedCode,
+          suggestions: response.data.data.suggestions,
+        
         },
       });
     } catch (error) {
