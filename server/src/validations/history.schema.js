@@ -11,7 +11,7 @@ import mongoose from "mongoose";
     5. Non-string
 
 */
-const objectSchema = z
+export const objectSchema = z
   .string()
   .refine((value) => mongoose.Types.ObjectId.isValid(value), {
     message: "Invalid MongoDB ObjectId format",

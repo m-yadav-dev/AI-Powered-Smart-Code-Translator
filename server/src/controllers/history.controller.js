@@ -15,8 +15,9 @@ export const getUserHistory = async (req, res, next) => {
 
     const { page, limit } = validatedQuery.data;
 
+    const userId = req.user?._id || req.user?.id; // Adjust based on how user ID is stored in the request
     const result = await historyService.getUserHistory(
-      req.user._id,
+      userId.toString(), // Ensure userId is a string
       page,
       limit,
     );
@@ -26,6 +27,7 @@ export const getUserHistory = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
+    console.error("Error in getUserHistory controller:", error);
     next(error);
   }
 };
@@ -48,11 +50,19 @@ export const getHistoryEntryById = async (req, res, next) => {
 
     const entry = await historyService.getHistoryEntryById(entryId, userId);
 
+    if (!entry) {
+      return res.status(404).json({
+        success: false,
+        message: "History entry not found",
+        statusCode: 404,
+      });
+    }
     return res.status(200).json({
       success: true,
       data: entry,
     });
   } catch (error) {
+    console.error("Error in getHistoryEntryById controller:", error);
     next(error);
   }
 };
@@ -76,6 +86,14 @@ export const deleteHistoryEntry = async (req, res, next) => {
       entryId,
       userId,
     );
+
+    if (!deletedEntry) {
+      return res.status(404).json({
+        success: false,
+        message: "History entry not found or does not belong to the user.",
+        statusCode: 404,
+      });
+    }
 
     return res.status(200).json({
       success: true,

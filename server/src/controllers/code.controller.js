@@ -76,12 +76,18 @@ export const analyzeComplexity = async (req, res, next) => {
 
     // Save to History Schema
 
+    const timeComplexityData = {
+      explanation: result.explanation,
+      timeComplexity: result.timeComplexity,
+      spaceComplexity: result.spaceComplexity,
+    }
+
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "complexity_analysis",
       inputCode: code,
       sourceLanguage,
-      outputCode: result.timeComplexity,
+      outputCode: JSON.stringify(timeComplexityData),
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
@@ -89,6 +95,7 @@ export const analyzeComplexity = async (req, res, next) => {
     // Return the result to the client
     return res.status(200).json({
       success: true,
+
       data: result,
     });
   } catch (error) {
@@ -148,16 +155,22 @@ export const optimizeSourceCode = async (req, res, next) => {
 
     const { code, sourceLanguage } = validationResult.data;
 
-    const result = await optimizeCode(code, sourceLanguage);
+    const result = await codeOptimization(code, sourceLanguage);
 
     // Save to History Schema
+
+
+    const optimizationData = {
+      optimizedCode: result.optimizedCode,
+      suggestions: result.suggestions,
+    }
 
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "code_optimization",
       inputCode: code,
       sourceLanguage,
-      outputCode: result.optimizedCode,
+      outputCode: JSON.stringify(optimizationData),
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
