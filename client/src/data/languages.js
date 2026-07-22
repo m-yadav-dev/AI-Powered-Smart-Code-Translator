@@ -1,23 +1,23 @@
 const LANGUAGES = [
   {
     id: "javascript",
-    name: "JavaScript",
+    label: "JavaScript",
   },
   {
     id: "python",
-    name: "Python",
+    label: "Python",
   },
   {
     id: "java",
-    name: "Java",
+    label: "Java",
   },
   {
     id: "cpp",
-    name: "C++",
+    label: "C++",
   },
   {
     id: "csharp",
-    name: "C#",
+    label: "C#",
   },
 ];
 
