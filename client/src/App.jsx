@@ -3,8 +3,8 @@ import { useAuthStore } from "./store/useAuthStore";
 import { Suspense, lazy, useEffect } from "react";
 
 const Home = lazy(() => import("./pages/HomePage"));
-const SignUpPage = lazy(() => import("./pages/SignUpPage"));
-const LogInPage = lazy(() => import("./pages/LoginPage"));
+const SignUpPage = lazy(() => import("./features/Auth/SignUpPage"));
+const LogInPage = lazy(() => import("./features/Auth/LoginPage"));
 
 const LoadingScreen = ({ message }) => {
   return (

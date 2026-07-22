@@ -11,7 +11,7 @@
 import { useState } from "react";
 import LogInPageInput from "../components/LoginInput";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "../../store/useAuthStore";
 import toast from "react-hot-toast";
 const LogInPage = () => {
   const [formData, setFormData] = useState({

@@ -11,7 +11,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SignUpInput from "../components/SignUpInput";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "../../store/useAuthStore";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
 // Load Vite Google client Id from environment variables
