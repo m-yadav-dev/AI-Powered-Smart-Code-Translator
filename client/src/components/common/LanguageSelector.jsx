@@ -1,6 +1,6 @@
 import { LANGUAGES } from "../../data/languages";
 
-export const LanguageSelector = () => {
+const LanguageSelector = () => {
   return (
     <select
       value="javascript"
@@ -25,3 +25,5 @@ export const LanguageSelector = () => {
     </select>
   );
 };
+
+export default LanguageSelector;
