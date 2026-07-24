@@ -4,10 +4,11 @@ import { useCodeStore } from "../store/useCodeStore";
 import { toast } from "react-hot-toast";
 
 // Importing  modular components
-import OutputPanel from "../features/Editor/OutputPanel";
+
 import { EditorToolbar } from "../features/Editor/EditorToolbar";
 import SourcePanel from "../features/Editor/SourcePanel";
 import SwapButton from "../features/Editor/SwapButton";
+import CodeOutputViewer from "../features/Editor/CodeOutputViewer";
 
 const Home = () => {
   const [targetLanguage, setTargetLanguage] = useState("javascript");
@@ -114,7 +115,7 @@ const Home = () => {
           <SwapButton activeAction={activeAction} onSwap={handleSwap} />
 
           {/* Output Panel */}
-          <OutputPanel
+          <CodeOutputViewer
             action={activeAction}
             targetLanguage={
               activeAction === "translate" ? targetLanguage : null

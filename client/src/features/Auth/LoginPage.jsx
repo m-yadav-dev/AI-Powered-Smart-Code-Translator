@@ -9,7 +9,7 @@
 */
 
 import { useState } from "react";
-import LogInPageInput from "../components/LoginInput";
+import LogInPageInput from "../../components/forms/LoginInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import toast from "react-hot-toast";
