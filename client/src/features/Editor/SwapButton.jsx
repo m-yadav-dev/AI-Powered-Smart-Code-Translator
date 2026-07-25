@@ -1,20 +1,21 @@
-import { ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeftRight } from "lucide-react";
 
 const SwapButton = ({ activeAction, onSwap }) => {
   return (
     <div className="flex items-center justify-center">
-      {activeAction === "translate" ? (
-        <button
-          className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300"
-          onClick={onSwap}
-        >
-          <ToggleRight className="w-5 h-5 mr-2" />
-        </button>
-      ) : (
-        <span className="text-lg font-semibold text-gray-400">
-          <ToggleLeft className="w-5 h-5 mr-2" />
-        </span>
-      )}
+      <button
+        type="button"
+        onClick={onSwap}
+        className={`flex cursor-pointer items-center justify-center rounded-full border border-slate-700 bg-slate-800/80 p-3 text-slate-300 shadow-xl transition-all duration-300 hover:rotate-180 hover:scale-110 hover:border-indigo-500 hover:bg-slate-800 hover:text-indigo-400 ${
+          activeAction !== "translate"
+            ? "pointer-events-none opacity-30"
+            : ""
+        }`}
+        aria-label="Swap source and target languages"
+        disabled={activeAction !== "translate"}
+      >
+        <ArrowLeftRight className="h-4 w-4" />
+      </button>
     </div>
   );
 };
