@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useCodeStore } from "../../store/useCodeStore";
 import AnalyzeView from "./OutputViews/AnalyzeView";
 import ExplainView from "./OutputViews/ExplainView";
@@ -13,8 +12,6 @@ const VIEW_MAP = {
 };
 
 const OutputPanel = ({ action, targetLanguage }) => {
-  const [copy, setCopy] = useState(false);
-
   const translatedCode = useCodeStore((store) => store.translatedCode);
   const codeOptimization = useCodeStore((store) => store.codeOptimization);
   const explanation = useCodeStore((store) => store.explanationData);
@@ -44,36 +41,8 @@ const OutputPanel = ({ action, targetLanguage }) => {
     );
   }
 
-  const handleCopy = () => {
-    let textToCopy = "";
-
-    if (typeof result === "string") {
-      textToCopy = result;
-    } else if (typeof result === "object") {
-      if (action === "analyze") {
-        textToCopy = `Time Complexity: ${result?.timeComplexity || "N/A"}\nSpace Complexity: ${result?.spaceComplexity || "N/A"}\nExplanation: ${result?.explanation || "No explanation available."}`;
-      } else {
-        textToCopy = JSON.stringify(result, null, 2);
-      }
-    }
-
-    if (textToCopy) {
-      navigator.clipboard.writeText(textToCopy);
-      setCopy(true);
-      setTimeout(() => setCopy(false), 2000); // Reset copy state after 2 seconds
-    }
-  };
-
   return (
-    <div className="flex flex-col h-full w-full">
-      {/* Universal Copy Button */}
-      <button
-        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 absolute top-2 right-2"
-        onClick={handleCopy}
-      >
-        {copy ? "Copied!" : "Copy Output"}
-      </button>
-
+    <div className="flex h-full w-full flex-col">
       <SelectedView result={result} targetLanguage={targetLanguage} />
     </div>
   );

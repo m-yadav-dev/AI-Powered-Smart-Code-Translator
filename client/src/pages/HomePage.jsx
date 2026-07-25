@@ -69,10 +69,7 @@ const Home = () => {
 
 
   const handleSwap = () => {
-    if (activeAction !== "translate") {
-      toast.error("Swap is only available for the Translate action.");
-      return;
-    }
+ 
     setSourceLanguage(targetLanguage);
     setTargetLanguage(sourceLanguage);
 
@@ -88,41 +85,49 @@ const Home = () => {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <main className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100 md:px-8">
       {/* Toolbar */}
 
-      <EditorToolbar
-        activeAction={activeAction}
-        setActiveAction={setActiveAction}
-        isLoading={isLoading}
-        onExecute={onClickExecuteAction}
-      />
+      <div className="mx-auto mb-6 w-full max-w-7xl">
+        <EditorToolbar
+          activeAction={activeAction}
+          setActiveAction={setActiveAction}
+          isLoading={isLoading}
+          onExecute={onClickExecuteAction}
+        />
+      </div>
 
       {/* Editor: Source and Output */}
 
-      <section className="w-full max-w-4xl p-4 bg-white shadow-md rounded-md">
-        <div className="flex flex-col md:flex-row gap-4">
+      <section className="mx-auto w-full max-w-7xl rounded-xl border border-slate-800 bg-slate-900/60 p-4 shadow-2xl backdrop-blur-md">
+        <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-stretch">
           {/* Source Code Editor */}
 
-          <SourcePanel
-            sourceLanguage={sourceLanguage}
-            setSourceLanguage={setSourceLanguage}
-            editorRef={editorRef}
-            onClearEditor={handleClearEditor}
-          />
+          <div className="w-full flex-1">
+            <SourcePanel
+              sourceLanguage={sourceLanguage}
+              setSourceLanguage={setSourceLanguage}
+              editorRef={editorRef}
+              onClearEditor={handleClearEditor}
+            />
+          </div>
           {/* Middle Swap Button */}
 
-          <SwapButton activeAction={activeAction} onSwap={handleSwap} />
+          <div className="flex items-center justify-center py-1 lg:self-center lg:py-0">
+            <SwapButton activeAction={activeAction} onSwap={handleSwap} />
+          </div>
 
           {/* Output Panel */}
-          <CodeOutputViewer
-            action={activeAction}
-            targetLanguage={
-              activeAction === "translate" ? targetLanguage : null
-            }
-            setTargetLanguage={setTargetLanguage}
-            isLoading={isLoading}
-          />
+          <div className="w-full flex-1">
+            <CodeOutputViewer
+              action={activeAction}
+              targetLanguage={
+                activeAction === "translate" ? targetLanguage : null
+              }
+              setTargetLanguage={setTargetLanguage}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
       </section>
     </main>

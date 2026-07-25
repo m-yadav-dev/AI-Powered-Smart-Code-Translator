@@ -6,13 +6,13 @@ const LanguageSelector = ({ onChange, value }) => {
       value={value}
       onChange={onChange}
       disabled={false}
-      className="bg-gray-100 text-gray-800 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer appearance-none shadow-sm"
     >
       {LANGUAGES.map((eachLanguage) => (
         <option
           key={eachLanguage.id}
           value={eachLanguage.id}
-          className="bg-gray-100 text-gray-800 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-slate-950 text-slate-300 cursor-pointer"
         >
           {eachLanguage.label}
         </option>

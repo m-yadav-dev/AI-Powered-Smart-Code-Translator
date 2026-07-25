@@ -1,3 +1,5 @@
+import { Loader2, Play, Sparkles } from "lucide-react";
+
 const ACTIONS = [
   {
     id: "translate",
@@ -24,33 +26,44 @@ export const EditorToolbar = ({
   onExecute,
 }) => {
   return (
-    <section className="w-full max-w-4xl p-4 bg-white shadow-md rounded-md mb-4">
-      <div className="flex flex-wrap gap-2">
+    <section className="w-full rounded-xl border border-slate-800 bg-slate-900/80 p-3 shadow-lg backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2 rounded-full border border-slate-800 bg-slate-950/50 p-1">
         {ACTIONS.map((action) => (
           <button
             key={action.id}
-            className={`px-4 py-2 rounded-md ${
+            type="button"
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
               activeAction === action.id
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                ? "bg-indigo-600 text-white shadow-md"
+                : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
             }`}
             onClick={() => setActiveAction(action.id)}
           >
+            {activeAction === action.id && <Sparkles className="h-4 w-4" />}
             {action.label}
           </button>
         ))}
+        </div>
+
+        <button
+          type="button"
+          className={`inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2 font-medium text-white shadow-lg shadow-emerald-950/40 transition-all ${
+            isLoading
+              ? "cursor-not-allowed bg-emerald-700/60"
+              : "bg-emerald-600 hover:bg-emerald-500"
+          }`}
+          onClick={onExecute}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Play className="h-4 w-4" />
+          )}
+          {isLoading ? "Processing..." : "Execute Action"}
+        </button>
       </div>
-      <button
-        className={`mt-4 px-4 py-2 rounded-md ${
-          isLoading
-            ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-            : "bg-green-500 text-white hover:bg-green-600"
-        }`}
-        onClick={onExecute}
-        disabled={isLoading}
-      >
-        {isLoading ? "Processing..." : "Execute Action"}
-      </button>
     </section>
   );
 };

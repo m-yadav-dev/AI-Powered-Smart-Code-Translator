@@ -6,7 +6,7 @@ const data = {
   language: CODE_EDITOR_LANGUAGES.javascript,
 };
 
-const CodeEditor = (readOnly = false) => {
+const CodeEditor = () => {
   const [localCode, setLocalCode] = useState("");
   const onChangeLocalCode = (value) => {
     setLocalCode(value);
@@ -24,7 +24,7 @@ const CodeEditor = (readOnly = false) => {
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
         wordWrap: "on",
-        readOnly: readOnly,
+        readOnly: false,
         padding: { top: 10, bottom: 10 },
         automaticLayout: true,
         tabSize: 2,
@@ -35,6 +35,8 @@ const CodeEditor = (readOnly = false) => {
         autoClosingQuotes: "always",
         matchBrackets: "always",
         formatOnPaste: true,
+        autoFormat: true,
+
         suggestOnTriggerCharacters: true,
         folding: true,
         smoothScrolling: true,
