@@ -3,78 +3,74 @@ export const TRANSLATE_PROMPT = (
   sourceLanguage,
   targetLanguage,
 ) => `
-You are an expert code translator. Translate the following ${sourceLanguage} code to ${targetLanguage}.
+You are an expert software engineer. Translate the following ${sourceLanguage} code into ${targetLanguage}.
 
-Rules:
-1. Only return the translated code, no explanations.
-2. Preserve the logic and functionality exactly.
-3. Use idiomatic patterns of the target language.
-4. Include necessary imports/headers for the target language.
-5. Do NOT wrap the code in markdown code blocks.
+RULES:
+1. Provide the absolute best, most optimized code.
+2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
+3. You MUST return ONLY a valid JSON object using the exact structure below.
 
-Source code (${sourceLanguage}):
+EXPECTED JSON FORMAT:
+{
+  "translatedCode": "<your_translated_code_here>"
+}
+
+CODE TO TRANSLATE:
 ${sourceCode}
-
-Translated code (${targetLanguage}):
 
 `;
 
 export const ANALYZE_COMPLEXITY = (sourceCode, sourceLanguage) => `
-    You are an expert algorithm analyst. Analyze the time and space complexity of the following ${sourceLanguage} code.
+You are an expert software engineer. Analyze the time and space complexity of the following ${sourceLanguage} code.
 
-Rules:
-1. Respond with ONLY a JSON object in this exact format:
+RULES:
+1. Provide the absolute best, most optimized code.
+2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
+3. You MUST return ONLY a valid JSON object using the exact structure below.
+
+EXPECTED JSON FORMAT:
 {
-  "timeComplexity": "O(...)",
-  "spaceComplexity": "O(...)",
-  "explanation": "Brief explanation of why"
+  "translatedCode": "<your_translated_code_here>"
 }
-2. Be precise with Big-O notation.
-3. Consider worst-case complexity.
-4. Keep the explanation under 200 words.
-5. Do NOT include any other text or markdown formatting.
 
-Code (${sourceLanguage}):
+CODE TO TRANSLATE:
 ${sourceCode}
 
 `;
 
 export const CODE_OPTIMIZATION = (sourceCode, sourceLanguage) => `
 
+You are an expert software engineer. Optimize the following ${sourceLanguage} code for better performance and readability.
 
-    You are an expert ${sourceLanguage} developer. Optimize the following code for better performance and readability.
+RULES:
+1. Provide the absolute best, most optimized code.
+2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
+3. You MUST return ONLY a valid JSON object using the exact structure below.
 
-Rules:
-1. Respond with ONLY a JSON object in this exact format:
+EXPECTED JSON FORMAT:
 {
-  "optimizedCode": "the optimized code here",
-  "suggestions": "bullet-point list of what you improved and why"
+  "optimizedCode": "<your_optimized_code_here>",
+  "suggestions": "<your_suggestions_here>"
 }
-2. Keep the same functionality.
-3. Use best practices and idiomatic patterns.
-4. Focus on performance, readability, and maintainability.
-5. Do NOT include markdown code blocks inside the JSON.
 
-Code (${sourceLanguage}):
+CODE TO OPTIMIZE:
 ${sourceCode}
 
 `;
 
 export const EXPLAIN_CODE = (sourceCode, sourceLanguage) => `
-    You are a patient programming teacher. Explain the following ${sourceLanguage} code in a beginner-friendly way.
+  You are an expert software engineer. Explain the following ${sourceLanguage} code in a beginner-friendly way.
 
-Rules:
-1. Respond with ONLY a JSON object in this exact format:
+RULES:
+1. Provide the absolute best, most optimized code.
+2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
+3. You MUST return ONLY a valid JSON object using the exact structure below.
+
+EXPECTED JSON FORMAT:
 {
   "explanation": "your detailed explanation here"
 }
-2. Explain what each important section does.
-3. Use simple language a beginner can understand.
-4. Mention any important concepts or patterns used.
-5. Keep it concise but thorough.
-6. Do NOT include markdown code blocks inside the JSON.
 
-Code (${sourceLanguage}):
+CODE TO EXPLAIN:
 ${sourceCode}
 `;
-

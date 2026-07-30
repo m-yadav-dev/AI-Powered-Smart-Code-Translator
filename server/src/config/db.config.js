@@ -15,7 +15,11 @@ const connectDB = async () => {
     console.log(`✨ MongoDB Version: ${mongoose.version}`);
     console.log(
       `🟢 MongoDB Connection State: ${mongoose.connection.readyState}`,
+    
+    console.log(`Database Name: ${mongoose.connection.name}`)
+
     );
+    console.log(`MongoDB Connection Host: ${mongoose.connection.host}`);
   } catch (error) {
     console.error("❌ Error connecting to MongoDB:", error);
     process.exit(1); // Exit the process with failure

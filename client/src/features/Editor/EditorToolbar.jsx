@@ -1,4 +1,5 @@
-import { Loader2, Play, Sparkles } from "lucide-react";
+import { History, Loader2, Play, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ACTIONS = [
   {
@@ -25,6 +26,10 @@ export const EditorToolbar = ({
   isLoading,
   onExecute,
 }) => {
+  
+  
+  const navigate = useNavigate();
+  
   return (
     <section className="w-full rounded-xl border border-slate-800 bg-slate-900/80 p-3 shadow-lg backdrop-blur-md">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -62,6 +67,11 @@ export const EditorToolbar = ({
             <Play className="h-4 w-4" />
           )}
           {isLoading ? "Processing..." : "Execute Action"}
+        </button>
+
+        <button className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-slate-800/80 px-5 py-2 font-medium text-slate-300 shadow-lg shadow-slate-950/40 transition-all hover:bg-slate-800 hover:text-indigo-400" onClick={() => navigate("/history")}>
+          <History className="h-4 w-4" />
+          View History
         </button>
       </div>
     </section>

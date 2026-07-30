@@ -6,6 +6,9 @@ import { analyzeCodeComplexity } from "../services/code-services/complexity.serv
 import { explainCode } from "../services/code-services/explanation.service.js";
 import { createHistoryEntry } from "../services/history/history.service.js";
 import { codeOptimization } from "../services/code-services/optimization.service.js";
+
+const getZodErrorMessages = (validationError) =>
+  (validationError?.issues || []).map((err) => err.message);
 /*
     Implement the controller functions for code translation, complexity analysis, code explanation, and code optimization. Each function validates the request body using Zod schemas, calls the corresponding service function, saves the result to the history, and returns the result to the client. Error handling is included to catch any exceptions and pass them to the next middleware.
 
@@ -16,39 +19,42 @@ import { codeOptimization } from "../services/code-services/optimization.service
      
 */
 export const translateSourceCode = async (req, res, next) => {
+  console.log("Received request body for translation:", req.body);
   try {
     const validationResult = translationSchema.safeParse(req.body);
 
+
+    console.log("Validation result data type:", validationResult.data);
     if (!validationResult.success) {
       return res.status(400).json({
         success: false,
         message: "Validation failed",
-        errors: validationResult.error.errors.map((err) => err.message),
+        errors: getZodErrorMessages(validationResult.error),
       });
     }
 
     // Extract validated data
 
-    const { code, sourceLanguage, targetLanguage } = validationResult.data;
+    const { sourceCode, sourceLanguage, targetLanguage } = validationResult.data;
 
-    const result = await translateCode(code, sourceLanguage, targetLanguage);
+    const result = await translateCode(sourceCode, sourceLanguage, targetLanguage);
     console.log("Translation result:", result);
     // Save to History
 
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "translation",
-      inputCode: code,
+      inputCode: sourceCode,
       sourceLanguage,
       targetLanguage,
-      outputCode: result.translatedCode,
+      outputCode: JSON.stringify(result.translatedCode),
     }).catch((err) =>
       console.error("Failed to save history entry:", err.message),
     );
 
     return res.status(200).json({
       success: true,
-      data: result,
+      data: result.translatedCode,
     });
   } catch (error) {
     next(error);
@@ -64,15 +70,15 @@ export const analyzeComplexity = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Validation failed",
-        errors: validationResult.error.errors.map((err) => err.message),
+        errors: getZodErrorMessages(validationResult.error),
       });
     }
 
     // Get the validated data
 
-    const { code, sourceLanguage } = validationResult.data;
+    const { sourceCode, sourceLanguage } = validationResult.data;
 
-    const result = await analyzeCodeComplexity(code, sourceLanguage);
+    const result = await analyzeCodeComplexity(sourceCode, sourceLanguage);
 
     // Save to History Schema
 
@@ -85,7 +91,7 @@ export const analyzeComplexity = async (req, res, next) => {
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "complexity_analysis",
-      inputCode: code,
+      inputCode: sourceCode,
       sourceLanguage,
       outputCode: JSON.stringify(timeComplexityData),
     }).catch((error) =>
@@ -111,23 +117,23 @@ export const explainSourceCode = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Validation failed",
-        errors: validationResult.error.errors.map((err) => err.message),
+        errors: getZodErrorMessages(validationResult.error),
       });
     }
 
-    const { code, sourceLanguage } = validationResult.data;
+    const { sourceCode, sourceLanguage } = validationResult.data;
 
-    const result = await explainCode(code, sourceLanguage);
-
+    const result = await explainCode(sourceCode, sourceLanguage);
+    console.log("Explanation result:", result);
     // Save to History Schema
 
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "code_explanation",
-
-      inputCode: code,
+      inputCode: sourceCode,
       sourceLanguage,
-      outputCode: result.explanation,
+      targetLanguage: null,
+      outputCode: JSON.stringify(result.explanation),
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),
     );
@@ -149,13 +155,13 @@ export const optimizeSourceCode = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Validation failed",
-        errors: validationResult.error.errors.map((err) => err.message),
+        errors: getZodErrorMessages(validationResult.error),
       });
     }
 
-    const { code, sourceLanguage } = validationResult.data;
+    const { sourceCode, sourceLanguage } = validationResult.data;
 
-    const result = await codeOptimization(code, sourceLanguage);
+    const result = await codeOptimization(sourceCode, sourceLanguage);
 
     // Save to History Schema
 
@@ -168,8 +174,8 @@ export const optimizeSourceCode = async (req, res, next) => {
     createHistoryEntry({
       userId: req.user._id.toString(),
       action: "code_optimization",
-      inputCode: code,
-      sourceLanguage,
+      inputCode: sourceCode,
+      sourceLanguage, 
       outputCode: JSON.stringify(optimizationData),
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),

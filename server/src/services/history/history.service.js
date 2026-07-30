@@ -9,7 +9,9 @@ export const createHistoryEntry = async (data) => {
   const validateData = createHistorySchema.safeParse(data);
   console.log("Validated data:", validateData);
   if (!validateData.success) {
-    const errorDetails = validateData.error.errors.map((err) => err.message);
+    const errorDetails = (validateData.error.issues || []).map(
+      (err) => err.message,
+    );
     throw new Error(`Validation failed: ${errorDetails.join(", ")}`);
   }
 

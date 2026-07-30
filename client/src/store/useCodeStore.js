@@ -13,16 +13,22 @@ export const useCodeStore = create((set) => ({
   codeOptimizationData: null,
   codeOptimization: "",
   suggestions: "",
-
+  
   translateSourceCode: async (code, sourceLanguage, targetLanguage) => {
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/translate-code", {
-        code,
+        sourceCode: code,
         sourceLanguage,
         targetLanguage,
       });
-      set({ translatedCode: response.data.data.translatedCode });
+      console.log("Zustand Translation Response:", response.data);
+
+      const finalResponse =
+        response.data.data.outputCode ||
+        response.data.data.translatedCode ||
+        "No translated code provided";
+      set({ translatedCode: finalResponse });
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
@@ -48,11 +54,11 @@ export const useCodeStore = create((set) => ({
         code,
         sourceLanguage,
       });
+
       set({
         complexityData: {
           timeComplexity: response.data.data.timeComplexity,
-          spaceComplexity:
-            response.data.data.spaceComplexity,
+          spaceComplexity: response.data.data.spaceComplexity,
           explanation: response.data.data.explanation,
         },
       });
@@ -75,6 +81,8 @@ export const useCodeStore = create((set) => ({
         code,
         sourceLanguage,
       });
+
+      console.log("Zustand Explain Code Response:", response.data);
 
       set({
         explanationData: {
@@ -105,7 +113,6 @@ export const useCodeStore = create((set) => ({
         codeOptimizationData: {
           optimizedCode: response.data.data.optimizedCode,
           suggestions: response.data.data.suggestions,
-        
         },
       });
     } catch (error) {

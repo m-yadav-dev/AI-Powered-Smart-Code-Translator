@@ -1,16 +1,33 @@
-export const parseGeminiResponseToJson = (text) => {
+export const parseGeminiResponseToJson = (responseData) => {
   try {
-    let cleanedText = text.trim();
+    let cleanedText = responseData.trim();
 
-    if (cleanedText.startsWith("```")) {
-      cleanedText = cleanedText.replace(/^```(?:json)?\s*\n?/, "");
-      cleanedText = cleanedText.replace(/\n?```\s*$/, "");
+    cleanedText = cleanedText
+      .replace(/```(?:json)?/gi, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const firstIndex = cleanedText.search(/[\{\[]/);
+    const lastIndex = Math.max(
+      cleanedText.lastIndexOf("}"),
+      cleanedText.lastIndexOf("]"),
+    );
+
+    if (firstIndex === -1 || lastIndex === -1) {
+      throw new Error("No JSON object found in the response.");
     }
 
-    return JSON.parse(cleanedText.trim());
+    const jsonString = cleanedText.substring(firstIndex, lastIndex + 1);
+
+    return JSON.parse(jsonString);
   } catch (error) {
-    console.error("Error parsing Gemini response to JSON:", error);
-    throw new Error("Failed to parse Gemini response to JSON.");
+    console.error(
+      "=========== RAW TEXT FAILED TO PARSE ===========\n",
+      responseData,
+    );
+    throw new Error(
+      `Failed to parse Gemini response to JSON: ${error.message}`,
+    );
   }
 };
 
@@ -23,19 +40,3 @@ export const cleanedCodeResponse = (text) => {
   }
   return cleanedText.trim();
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
