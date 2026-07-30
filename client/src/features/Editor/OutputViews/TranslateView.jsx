@@ -1,14 +1,14 @@
+import CodeEditor from "../CodeEditor";
 
-import  CodeEditor  from "../CodeEditor";
-
-const TranslateView = ({ result }) => {
+const TranslateView = ({ result, targetLanguage }) => {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-row gap-4">
+    <div className="flex flex-col gap-4 h-full w-full">
+      <div className="flex flex-row gap-4 h-full w-full min-h-[400px]">
         <CodeEditor
           readOnly={true}
-          code={result?.translatedCode || ""}
+          code={result || ""}
           onChange={() => {}}
+          language={targetLanguage}
         />
       </div>
     </div>

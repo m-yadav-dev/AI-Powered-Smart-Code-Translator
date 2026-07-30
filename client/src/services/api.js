@@ -46,7 +46,7 @@ axiosInstance.interceptors.request.use(
     return response;
   },
   (error) => {
-    if (error.response && error.message``.status === 401) {
+    if (error.response && error.response.status === 401) {
       Cookies.remove("token");
     }
     return Promise.reject(error);

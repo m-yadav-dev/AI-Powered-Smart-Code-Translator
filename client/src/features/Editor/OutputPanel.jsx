@@ -21,11 +21,11 @@ const OutputPanel = ({ action, targetLanguage }) => {
 
   if (action === "translate") {
     result = translatedCode;
-  } else if (action === "optimize") {
+  } else if (action === "code_optimization") {
     result = codeOptimization;
-  } else if (action === "explain") {
+  } else if (action === "code_explanation") {
     result = explanation;
-  } else if (action === "analyze") {
+  } else if (action === "complexity_analysis") {
     result = complexityData;
   }
 

@@ -4,6 +4,10 @@ export const queryGemini = async (prompt) => {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
       contents: prompt,
+
+      config: {
+        responseMimeType: "application/json",
+      }
     });
 
     if (!response || !response.text) {
