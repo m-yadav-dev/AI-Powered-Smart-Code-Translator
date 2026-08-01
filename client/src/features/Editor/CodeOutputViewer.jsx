@@ -9,7 +9,7 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
   const [copied, setCopied] = useState(false);
 
   const translatedCode = useCodeStore((store) => store.translatedCode);
-  const codeOptimization = useCodeStore((store) => store.codeOptimization);
+  const codeOptimizationData = useCodeStore((store) => store.codeOptimizationData);
   const explanation = useCodeStore((store) => store.explanationData);
   const complexityData = useCodeStore((store) => store.complexityData);
 
@@ -19,7 +19,7 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
     }
 
     if (action === "optimize") {
-      return codeOptimization;
+      return codeOptimizationData;
     }
 
     if (action === "explain") {
@@ -31,7 +31,7 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
     }
 
     return null;
-  }, [action, codeOptimization, complexityData, explanation, translatedCode]);
+  }, [action, codeOptimizationData, complexityData, explanation, translatedCode]);
 
   const copyText = useMemo(() => {
     if (!result) {
@@ -51,7 +51,7 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
     }
 
     if (action === "optimize") {
-      return result?.codeOptimization || "";
+      return result?.optimizedCode || "";
     }
 
     if (action === "translate") {
@@ -105,7 +105,7 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
         </button>
       </div>
 
-      <div className="flex-1 w-full relative mt-3 overflow-hidden rounded-lg border border-slate-800 bg-[#1e1e1e]">
+      <div className="output-scroll flex-1 w-full relative mt-3 overflow-y-auto rounded-lg border border-slate-800 bg-[#1e1e1e]">
         {!isLoading && !result ? (
           <EmptyState />
         ) : (

@@ -13,7 +13,7 @@ const VIEW_MAP = {
 
 const OutputPanel = ({ action, targetLanguage }) => {
   const translatedCode = useCodeStore((store) => store.translatedCode);
-  const codeOptimization = useCodeStore((store) => store.codeOptimization);
+  const codeOptimizationData = useCodeStore((store) => store.codeOptimizationData);
   const explanation = useCodeStore((store) => store.explanationData);
   const complexityData = useCodeStore((store) => store.complexityData);
 
@@ -21,11 +21,11 @@ const OutputPanel = ({ action, targetLanguage }) => {
 
   if (action === "translate") {
     result = translatedCode;
-  } else if (action === "code_optimization") {
-    result = codeOptimization;
-  } else if (action === "code_explanation") {
+  } else if (action === "optimize") {
+    result = codeOptimizationData;
+  } else if (action === "explain") {
     result = explanation;
-  } else if (action === "complexity_analysis") {
+  } else if (action === "analyze") {
     result = complexityData;
   }
 
@@ -42,7 +42,7 @@ const OutputPanel = ({ action, targetLanguage }) => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex min-h-full w-full flex-col">
       <SelectedView result={result} targetLanguage={targetLanguage} />
     </div>
   );

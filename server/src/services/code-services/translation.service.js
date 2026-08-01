@@ -1,6 +1,6 @@
 import { queryGemini } from "../gemini/gemini.service.js";
 import { TRANSLATE_PROMPT } from "../../constants/prompts.js";
-import { cleanedCodeResponse } from "../../utils/prompts.utils.js";
+import { parseGeminiResponseToJson } from "../../utils/prompts.utils.js";
 import { getLanguagesName } from "../../constants/languages.js";
 
 export const translateCode = async (
@@ -21,19 +21,16 @@ export const translateCode = async (
 
   const rawResponse = await queryGemini(prompt);
 
-  const cleanedResponse = cleanedCodeResponse(rawResponse);
+  // Gemini returns a JSON object: { "translatedCode": "..." }
+  // parseGeminiResponseToJson strips fences AND parses the JSON so we
+  // can extract the .translatedCode string directly.
+  const parsed = parseGeminiResponseToJson(rawResponse);
+  const translatedCode = parsed.translatedCode || "No translated code provided";
 
   return {
-    translatedCode: cleanedResponse || "No translated code provided",
+    translatedCode,
     sourceLanguage: sourceLanguageName,
     targetLanguage: targetLanguageName,
   };
 
-  return {
-    translatedCode: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
-    sourceLanguage: sourceLanguageName,
-    targetLanguage: targetLanguageName,
-  };
-
-  
 };

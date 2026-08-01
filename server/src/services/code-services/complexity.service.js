@@ -19,10 +19,4 @@ export const analyzeCodeComplexity = async (sourceCode, sourceLanguage) => {
       responseJson.spaceComplexity || "No space complexity provided",
     explanation: responseJson.explanation || "No explanation provided",
   };
-
-  return {
-    timeComplexity: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
-    spaceComplexity: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
-    explanation: `Failed to clean Gemini response. Please check the raw response for details. Error: ${error.message}`,
-  };
 };
