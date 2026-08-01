@@ -24,16 +24,18 @@ export const ANALYZE_COMPLEXITY = (sourceCode, sourceLanguage) => `
 You are an expert software engineer. Analyze the time and space complexity of the following ${sourceLanguage} code.
 
 RULES:
-1. Provide the absolute best, most optimized code.
-2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
+1. Analyze the algorithm thoroughly and accurately.
+2. DO NOT include any conversational text, explanations outside the JSON, or markdown blocks.
 3. You MUST return ONLY a valid JSON object using the exact structure below.
 
 EXPECTED JSON FORMAT:
 {
-  "translatedCode": "<your_translated_code_here>"
+  "timeComplexity": "<e.g. O(n log n)>",
+  "spaceComplexity": "<e.g. O(n)>",
+  "explanation": "<a clear, concise explanation of why the code has this complexity>"
 }
 
-CODE TO TRANSLATE:
+CODE TO ANALYZE:
 ${sourceCode}
 
 `;
@@ -62,7 +64,7 @@ export const EXPLAIN_CODE = (sourceCode, sourceLanguage) => `
   You are an expert software engineer. Explain the following ${sourceLanguage} code in a beginner-friendly way.
 
 RULES:
-1. Provide the absolute best, most optimized code.
+1. Provide the absolute best explanation.
 2. DO NOT include any conversational text, explanations, or markdown blocks outside the JSON.
 3. You MUST return ONLY a valid JSON object using the exact structure below.
 

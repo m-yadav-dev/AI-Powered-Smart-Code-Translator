@@ -101,7 +101,7 @@ export const analyzeComplexity = async (req, res, next) => {
     // Return the result to the client
     return res.status(200).json({
       success: true,
-
+      
       data: result,
     });
   } catch (error) {
@@ -132,7 +132,7 @@ export const explainSourceCode = async (req, res, next) => {
       action: "code_explanation",
       inputCode: sourceCode,
       sourceLanguage,
-      targetLanguage: null,
+      targetLanguage: "",   // null would fail Mongoose String validation — use empty string instead
       outputCode: JSON.stringify(result.explanation),
     }).catch((error) =>
       console.error("Failed to save history entry:", error.message),

@@ -24,10 +24,10 @@ export const useCodeStore = create((set) => ({
       });
       console.log("Zustand Translation Response:", response.data);
 
-      const finalResponse =
-        response.data.data.outputCode ||
-        response.data.data.translatedCode ||
-        "No translated code provided";
+      // Controller sends: res.json({ success: true, data: result.translatedCode })
+      // Axios wraps it as: response.data = { success: true, data: "<string>" }
+      // So the translated code string lives at response.data.data
+      const finalResponse = response.data.data || "No translated code provided";
       set({ translatedCode: finalResponse });
     } catch (error) {
       const errorMessage =
@@ -51,10 +51,10 @@ export const useCodeStore = create((set) => ({
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/analyze-complexity", {
-        code,
+        sourceCode: code,   // ← was `code` — Zod schema expects `sourceCode`
         sourceLanguage,
       });
-
+      console.log("Zustand Complexity Analysis Response:", response.data);
       set({
         complexityData: {
           timeComplexity: response.data.data.timeComplexity,
@@ -78,7 +78,7 @@ export const useCodeStore = create((set) => ({
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/explain-code", {
-        code,
+        sourceCode: code,   // ← was `code` — Zod schema expects `sourceCode`
         sourceLanguage,
       });
 
@@ -105,16 +105,17 @@ export const useCodeStore = create((set) => ({
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/optimize-code", {
-        code,
+        sourceCode: code,
         sourceLanguage,
       });
-
+      console.log("Zustand Code Optimization Response:", response.data);
       set({
         codeOptimizationData: {
           optimizedCode: response.data.data.optimizedCode,
           suggestions: response.data.data.suggestions,
         },
       });
+      
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||

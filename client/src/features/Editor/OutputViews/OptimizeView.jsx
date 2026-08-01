@@ -2,10 +2,10 @@ import CodeEditor from "../CodeEditor";
 
 const OptimizeView = ({ result, targetLanguage }) => {
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col min-h-full w-full">
       <div className="flex flex-row gap-4">
         <CodeEditor
-          code={result?.codeOptimization || ""}
+          code={result?.optimizedCode || ""}
           readOnly={true}
           onChange={() => {}}
           language={targetLanguage || "javascript"}

@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+/* ── Output panel scrollbar ──────────────────────────────────────────────── */
+.output-scroll {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a; /* thumb: slate-700 | track: slate-900 */
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+.output-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.output-scroll::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+  border-radius: 9999px;
+}
+.output-scroll::-webkit-scrollbar-thumb {
+  background-color: #334155; /* slate-700 */
+  border-radius: 9999px;
+  transition: background-color 150ms ease;
+}
+.output-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b; /* slate-500 — brightens on hover */
+}
