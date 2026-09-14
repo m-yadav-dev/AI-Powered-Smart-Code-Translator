@@ -51,6 +51,14 @@ app.use(
   }),
 );
 
+// health check route
+app.get("/health", (request, response) => {
+  return response.json({
+    message: "AI Powered Smart Code Translator is running successfully",
+    status: 200
+  })
+})
+
 app.use(express.json());
 app.use("/api", router);
 
