@@ -23,7 +23,7 @@ const app = express();
 
 const allowedOrigins = [
   ENV_VAR.CLIENT_URL,
-  "http://localhost:3000",
+  "use-codemorph.vercel.app/api",
   "http://localhost:5173",
   "http://localhost:5174",
 ].filter(Boolean);
@@ -34,6 +34,7 @@ app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
   }),
 );
 
