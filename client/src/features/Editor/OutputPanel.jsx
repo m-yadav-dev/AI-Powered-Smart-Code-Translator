@@ -17,6 +17,8 @@ const OutputPanel = ({ action, targetLanguage }) => {
   const explanation = useCodeStore((store) => store.explanationData);
   const complexityData = useCodeStore((store) => store.complexityData);
 
+  console.log("Step 1: Code Optimization Data:", codeOptimizationData);
+
   let result = null;
 
   if (action === "translate") {
@@ -29,7 +31,10 @@ const OutputPanel = ({ action, targetLanguage }) => {
     result = complexityData;
   }
 
+
+
   const SelectedView = VIEW_MAP[action];
+
 
   if (!SelectedView) return null;
 

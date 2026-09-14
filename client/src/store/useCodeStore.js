@@ -13,7 +13,7 @@ export const useCodeStore = create((set) => ({
   codeOptimizationData: null,
   codeOptimization: "",
   suggestions: "",
-  
+
   translateSourceCode: async (code, sourceLanguage, targetLanguage) => {
     set({ isLoading: true, sourceCode: code, error: null });
     try {
@@ -30,12 +30,23 @@ export const useCodeStore = create((set) => ({
       const finalResponse = response.data.data || "No translated code provided";
       set({ translatedCode: finalResponse });
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.errors?.join(", ") ||
-        "An error occurred during code translation.";
-      console.error(`Zustand Translation Error: ${errorMessage}`);
-      set({ error: errorMessage });
+      let errorMessage =
+        "An unexpected error occurred during code translation.";
+
+      if (error.response && error.response.status === 429) {
+        errorMessage =
+          error.response.data.error ||
+          "Rate limit exceeded. Please try again later.";
+      } else if (error.response && error.response.data.error) {
+        errorMessage = error.response.data.error;
+      }
+
+      set({
+        error: errorMessage,
+        translatedCode: "",
+        sourceCode: "",
+        isLoading: false,
+      });
     } finally {
       set({ isLoading: false });
     }
@@ -51,7 +62,7 @@ export const useCodeStore = create((set) => ({
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/analyze-complexity", {
-        sourceCode: code,   // ← was `code` — Zod schema expects `sourceCode`
+        sourceCode: code, // ← was `code` — Zod schema expects `sourceCode`
         sourceLanguage,
       });
       console.log("Zustand Complexity Analysis Response:", response.data);
@@ -78,7 +89,7 @@ export const useCodeStore = create((set) => ({
     set({ isLoading: true, sourceCode: code, error: null });
     try {
       const response = await axiosInstance.post("/code/explain-code", {
-        sourceCode: code,   // ← was `code` — Zod schema expects `sourceCode`
+        sourceCode: code, // ← was `code` — Zod schema expects `sourceCode`
         sourceLanguage,
       });
 
@@ -108,14 +119,12 @@ export const useCodeStore = create((set) => ({
         sourceCode: code,
         sourceLanguage,
       });
-      console.log("Zustand Code Optimization Response:", response.data);
       set({
         codeOptimizationData: {
           optimizedCode: response.data.data.optimizedCode,
           suggestions: response.data.data.suggestions,
         },
       });
-      
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||

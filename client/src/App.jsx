@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
 import { Suspense, lazy, useEffect } from "react";
 import HistoryPage from "./features/History/HistoryPage";
+import HistoryDetailPage from "./features/History/HistoryDetailPage";
 
 const Home = lazy(() => import("./pages/HomePage"));
 const SignUpPage = lazy(() => import("./features/Auth/SignUpPage"));
@@ -55,6 +56,12 @@ const App = () => {
             path="/history"
             element={
               authUser ? <HistoryPage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/history/:id"
+            element={
+              authUser ? <HistoryDetailPage /> : <Navigate to="/login" replace />
             }
           />
         </Routes>

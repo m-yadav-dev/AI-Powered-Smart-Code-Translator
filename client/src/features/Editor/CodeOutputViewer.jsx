@@ -5,13 +5,21 @@ import LanguageSelector from "../../components/common/LanguageSelector";
 import EmptyState from "./EmptyState";
 import OutputPanel from "./OutputPanel";
 
-const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading }) => {
+const CodeOutputViewer = ({
+  action,
+  targetLanguage,
+  setTargetLanguage,
+  isLoading,
+}) => {
   const [copied, setCopied] = useState(false);
 
   const translatedCode = useCodeStore((store) => store.translatedCode);
-  const codeOptimizationData = useCodeStore((store) => store.codeOptimizationData);
+  const codeOptimizationData = useCodeStore(
+    (store) => store.codeOptimizationData,
+  );
   const explanation = useCodeStore((store) => store.explanationData);
   const complexityData = useCodeStore((store) => store.complexityData);
+  const error = useCodeStore((store) => store.error);
 
   const result = useMemo(() => {
     if (action === "translate") {
@@ -31,7 +39,13 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
     }
 
     return null;
-  }, [action, codeOptimizationData, complexityData, explanation, translatedCode]);
+  }, [
+    action,
+    codeOptimizationData,
+    complexityData,
+    explanation,
+    translatedCode,
+  ]);
 
   const copyText = useMemo(() => {
     if (!result) {
@@ -100,7 +114,11 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
           onClick={handleCopyOutput}
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs text-slate-400 transition-colors hover:bg-slate-800/60 hover:text-slate-200"
         >
-          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? (
+            <Check className="h-3.5 w-3.5" />
+          ) : (
+            <Copy className="h-3.5 w-3.5" />
+          )}
           {copied ? "Copied" : "Copy Output"}
         </button>
       </div>
@@ -123,6 +141,12 @@ const CodeOutputViewer = ({ action, targetLanguage, setTargetLanguage, isLoading
                 Processing output...
               </p>
             </div>
+            {!isLoading && error && (
+              <div className="flex-1 p-4 bg-red-50 border border-red-400 rounded-md text-red-700">
+                <h3 className="font-bold">Execution Failed</h3>
+                <p>{error}</p>
+              </div>
+            )}
           </div>
         )}
       </div>

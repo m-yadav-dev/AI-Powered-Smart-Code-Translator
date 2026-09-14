@@ -16,7 +16,6 @@ import {
   errorHandler,
   notFoundHandler,
 } from "./middleware/error.middleware.js";
-import { apiLimiter } from "./utils/rate-limiter.js";
 import helmet from "helmet";
 
 import cookieParser from "cookie-parser";
