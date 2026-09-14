@@ -137,3 +137,38 @@ export const historyData = [
     timestamp: "2023-10-11 09:00:00",
   },
 ];
+
+
+
+
+
+export const detailedHistoryData = [
+  {
+    id: 1,
+    sourceCode: "def greet():\n    print('Hello, World!')",
+    sourceLanguage: "JavaScript",
+    targetLanguage: "Python",
+    action: "translation",
+    outputCode: "print('Hello, World!')",
+    timestamp: "2023-10-01 10:00:00",
+  }, 
+  {
+    id: 2,
+    sourceCode: "console.log('Hello, World!');",
+    sourceLanguage: "JavaScript",
+    targetLanguage: "Python",
+    action: "translation",
+    outputCode: "print('Hello, World!')",
+    timestamp: "2023-10-01 10:00:00",
+  }, 
+  {
+    id: 3,
+    sourceCode: "def greet():\n    print('Hello, World!')",
+    sourceLanguage: "Python",
+    targetLanguage: "JavaScript",
+    action: "translation",
+    outputCode: "console.log('Hello, World!')",
+    timestamp: "2023-10-01 10:00:00",
+  }, 
+
+]
