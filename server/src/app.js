@@ -23,9 +23,9 @@ const app = express();
 
 const allowedOrigins = [
   ENV_VAR.CLIENT_URL,
-  "use-codemorph.vercel.app/api",
   "http://localhost:5173",
   "http://localhost:5174",
+  "https://use-codemorph.vercel.app/api"
 ].filter(Boolean);
 
 app.use(cookieParser());
