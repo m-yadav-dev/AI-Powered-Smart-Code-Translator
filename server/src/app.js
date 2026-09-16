@@ -25,7 +25,7 @@ const allowedOrigins = [
   ENV_VAR.CLIENT_URL,
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://use-codemorph.vercel.app/api"
+  "https://use-codemorph.vercel.app",
 ].filter(Boolean);
 
 app.use(cookieParser());
